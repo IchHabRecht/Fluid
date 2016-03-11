@@ -139,7 +139,7 @@ class ViewHelperNode extends AbstractNode {
 	 * @return string evaluated node after the view helper has been called.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		return $renderingContext->getViewHelperInvoker()->invoke($this->uninitializedViewHelper, $this->arguments, $renderingContext);
+		return $renderingContext->getViewHelperInvoker()->invoke(clone $this->uninitializedViewHelper, $this->arguments, $renderingContext);
 	}
 
 	/**

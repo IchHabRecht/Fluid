@@ -18,6 +18,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class RenderingContextFixture
@@ -94,6 +95,7 @@ class RenderingContextFixture implements RenderingContextInterface {
 	 */
 	public function __construct() {
 		$mockBuilder = new \PHPUnit_Framework_MockObject_Generator();
+		$this->view = $mockBuilder->getMock(TemplateView::class, ['dummy']);
 		$this->variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
 		$this->viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, array('dummy'));
 		$this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, array('dummy'));
@@ -102,6 +104,11 @@ class RenderingContextFixture implements RenderingContextInterface {
 		$this->templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, array('dummy'));
 		$this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, array('dummy'));
 		$this->cache = $mockBuilder->getMock(FluidCacheInterface::class);
+	}
+
+	public function getView()
+	{
+		return $this->view;
 	}
 
 	/**

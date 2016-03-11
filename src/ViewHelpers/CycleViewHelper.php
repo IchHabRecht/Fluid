@@ -60,13 +60,6 @@ class CycleViewHelper extends AbstractViewHelper {
 	protected $values = NULL;
 
 	/**
-	 * Current values index
-	 *
-	 * @var integer
-	 */
-	protected $currentCycleIndex = NULL;
-
-	/**
 	 * @return void
 	 */
 	public function initializeArguments() {
@@ -90,16 +83,22 @@ class CycleViewHelper extends AbstractViewHelper {
 		if ($this->values === NULL) {
 			$this->initializeValues($values);
 		}
-		if ($this->currentCycleIndex === NULL || $this->currentCycleIndex >= count($this->values)) {
-			$this->currentCycleIndex = 0;
+		$currentCycleIndex = 0;
+		$identifier = $this->getIdentifier($as);
+		if ($this->renderingContext->getView()->getRenderingContext()->getVariableProvider()->exists($identifier)) {
+			$currentCycleIndex = $this->renderingContext->getView()->getRenderingContext()->getVariableProvider()->get($identifier);
+		}
+		if ($currentCycleIndex === NULL || $currentCycleIndex >= count($this->values)) {
+			$currentCycleIndex = 0;
 		}
 
-		$currentValue = isset($this->values[$this->currentCycleIndex]) ? $this->values[$this->currentCycleIndex] : NULL;
+		$currentValue = isset($this->values[$currentCycleIndex]) ? $this->values[$currentCycleIndex] : NULL;
 		$this->templateVariableContainer->add($as, $currentValue);
 		$output = $this->renderChildren();
 		$this->templateVariableContainer->remove($as);
 
-		$this->currentCycleIndex++;
+		$currentCycleIndex++;
+		$this->renderingContext->getView()->getRenderingContext()->getVariableProvider()->add($identifier, $currentCycleIndex);
 
 		return $output;
 	}
@@ -120,6 +119,9 @@ class CycleViewHelper extends AbstractViewHelper {
 		} else {
 			$this->values = array_values($values);
 		}
-		$this->currentCycleIndex = 0;
+	}
+
+	protected function getIdentifier($as) {
+		return substr(md5($as . serialize($this->values)), 0, 8);
 	}
 }

@@ -129,6 +129,10 @@ class RenderingContext implements RenderingContextInterface {
 		$this->setVariableProvider(new StandardVariableProvider());
 	}
 
+	public function getView() {
+		return $this->view;
+	}
+
 	/**
 	 * Injects the template variable container containing all variables available through ObjectAccessors
 	 * in the template
